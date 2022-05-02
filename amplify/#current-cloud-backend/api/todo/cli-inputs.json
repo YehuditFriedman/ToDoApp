@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "todo",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "C:\\Users\\yzalts\\Desktop\\APPSYNC\\to-do\\amplify\\backend\\api\\todo\\schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authtododf668a86"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-05-01T06:21:47.131Z",
+        "keyDescription": "api description"
+      }
+    ],
+    "conflictResolution": {}
+  }
+}
