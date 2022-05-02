@@ -1,0 +1,14 @@
+  <br><br>
+  <div class="no-style">
+    <button class="btn btn-success" style="background-color: #047D95;" (click)="showNewTask()">{{showTask? 'Hide':
+      'Create New Task'}}</button>
+      <button class="btn btn-success" style="background-color: #047D95;" >
+        <a routerLink="/" class="navigate-todo" style=" color: white; ">Back</a>
+      </button>
+  </div>
+  <div *ngIf="showTask">
+    <app-add-task></app-add-task>
+  </div>
+  <br><br>
+  <app-to-do-list></app-to-do-list>
+ 

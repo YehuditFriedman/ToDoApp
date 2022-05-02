@@ -1,0 +1,93 @@
+<!-- <style>
+    .no-style .ng-valid {
+        border-left: 1px solid #CCC
+    }
+
+    .no-style .ng-invalid {
+        border-left: 1px solid #CCC
+    }
+</style>
+<div class="no-style">
+    <button class="btn btn-success" (click)="showNewTask()">{{showTask? 'Hide': 'Create New Task'}}</button>
+</div>
+<div class="no-style" style="margin-left: 4px" *ngIf="showTask">
+    <div class="container">
+        <div [hidden]="submitted">
+            <h3><b>Create Task</b></h3>
+            <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+                <hr>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="name" required [(ngModel)]="model.name" name="name"
+                        #name="ngModel">
+                    <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                        Name is required
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>body</label>
+                    <input type="text" class="form-control" id="body" [(ngModel)]="model.body" name="name">
+                </div>
+                <div class="form-group">
+                    <label>city</label>
+                    <input type="text" class="form-control" id="city" [(ngModel)]="model.city" name="name">
+                </div>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div class="centerDiv" layout-fill layout="column" layout-align="center none">
+    <form name="form" (ngSubmit)="f.form.valid && Add()" #f="ngForm">
+      <div layout="row" layout-align="center none">
+        <mat-card>
+          <mat-card-title>
+            <span class="mat-headline">Add ToDo</span>
+          </mat-card-title>
+          <mat-card-content>
+            <input type="text">
+            <label for="name">nameTask</label>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button class="btn btn-primary">Save</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </form>
+  </div> -->
+
+<div class="create-task" layout-align="center" style="display: flex; justify-content:center; align-items:center;" >
+  <div class="centerDiv" layout-fill layout="column" layout-align="center none">
+    <form name="form" (ngSubmit)="f.form.valid && Add()" #f="ngForm">
+      <div layout="row" layout-align="center none">
+        <mat-card>
+          <mat-card-title>
+            <span class="mat-headline">Add ToDo</span>
+          </mat-card-title>
+          <mat-card-content>
+            <mat-form-field>
+              <mat-label>Title</mat-label>
+              <input matInput [(ngModel)]="title" [name]="title" required/>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <textarea matInput [(ngModel)]="body" [name]="body" [ngModelOptions]="{standalone: true}"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>City</mat-label>
+              <mat-select>
+                <mat-option value="one">First option</mat-option>
+                <mat-option value="two">Second option</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button class="btn btn-primary" style="background-color: #047D95;">Save</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </form>
+  </div>
+</div>
