@@ -12,18 +12,20 @@
               <span>{{todo.body}}</span>
               <br>
               <span>{{todo.city}}</span>
+              <p>Weather</p>
+              <span>{{todo.temperature}}</span>
             </mat-card-content>
           </div>
           <ng-template #editTitle>
-            <mat-form-field appearance="fill">
+            <mat-form-field >
               <mat-label>Title</mat-label>
-              <input matInput [(ngModel)]="todo.name" [name]="title" required/>
+              <input matInput [(ngModel)]="todo.name" required/>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field >
               <mat-label>Description</mat-label>
-              <textarea matInput [(ngModel)]="todo.body" [name]="todo.body" [ngModelOptions]="{standalone: true}"></textarea>
+              <textarea matInput [(ngModel)]="todo.body" [ngModelOptions]="{standalone: true}"></textarea>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field >
               <mat-label>City</mat-label>
               <mat-select >
                 <mat-option>  undefined</mat-option>
@@ -31,9 +33,12 @@
               </mat-select>
             </mat-form-field>
             <mat-card-actions>
-              <button mat-button style="background-color: #424242;"(click)="Save(true)">
+              <button mat-button style="background-color: #424242;"(click)="Save(todo)">
                Save
               </button>
+              <button mat-button style="background-color: #424242;"(click)="Cancel()">
+                Cancel
+               </button>
             </mat-card-actions>
         </ng-template>
           <mat-card-actions>
@@ -43,7 +48,7 @@
               </button>
             </span>
             <span fxFlex="10%">
-              <button style="background-color: #047D95;" mat-icon-button (click)="Delete()">
+              <button style="background-color: #047D95;" mat-icon-button (click)="Delete(todo.id)">
                 <mat-icon>delete</mat-icon>
               </button>
             </span>
