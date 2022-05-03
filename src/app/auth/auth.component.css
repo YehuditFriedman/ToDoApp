@@ -5,3 +5,7 @@
   .navigate-todo {
     flex: 1 1 auto;
   }
+  amplify-authenticator +div  {
+    margin-left: 40%;
+    margin-top: 10%;
+  }

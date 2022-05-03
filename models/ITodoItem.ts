@@ -3,6 +3,7 @@ export interface ITodoItem {
     name: string;
     body?: string | null;
     city?: string | null;
+    temperature?: string | null;
     completed?: boolean | null;
 
     
