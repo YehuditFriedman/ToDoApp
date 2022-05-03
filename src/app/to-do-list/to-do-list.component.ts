@@ -3,12 +3,10 @@ import { ITodoItem } from 'models/ITodoItem';
 import { AppsyncService } from '../appsync.service';
 import { TodoItemInput } from '../types/TodoItemInput';
 import { updateTodo, deleteTodo } from '../../graphql/mutations';
-import {updateTodoInput, deleteTodoInput} from '../../graphql/inputs';
 import { listTodos } from '../../graphql/queries';
 import gql from 'graphql-tag';
 import { ApixuService } from '../apixu.service';
-import { buildMutation } from 'aws-appsync';
-import { API } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 @Component({
   selector: 'app-to-do-list',
   templateUrl: './to-do-list.component.html',
@@ -29,35 +27,48 @@ export class ToDoListComponent implements OnInit {
   description = 'j';
 
   cities: String[] = ['Beit Shemesh', 'Jerusalem', 'Lod'];
+  todos: Array<{item: ITodoItem, isEdit: boolean}> = [{item: { id: "16", name: 'sleep', body: 'tomorrow', city: 'jerusalem', completed: false,temperature: '12' }, isEdit: false},
+{item: { id: "164", name: 'smile', body: 'today', city: 'beit Shemesh', completed: true ,temperature: '22'}, isEdit: false}];
 
-  todos: ITodoItem[] = [{ id: "16", name: 'sleep', body: 'tomorrow', city: 'jerusalem', completed: false,temperature: '12' },
-  { id: "164", name: 'smile', body: 'today', city: 'beit Shemesh', completed: true ,temperature: '22'}];
 
 
-  ngOnInit(): void {
-    this.appsync.hc().then((client: any) => {
-      const observable = client.watchQuery({
-        query: gql(listTodos),
-        fetchPolicy: 'cache-and-network'
-      });
-      observable.subscribe((data: any) => {
-        this.allTodos = data?.allTodos?.items;
+// todoDisplay = [...this.todos];
 
-      });
-      this.allTodos.forEach((todo:any) => {
-        if (todo.city) {
-          this.apixuService.getWeather(todo.city).subscribe((data:any) => {
-            todo.temperature =data.current.temperature
-         })
-        }
-      });
 
-    });
+ async ngOnInit() {
+    // this.appsync.hc().then((client: any) => {
+    //   const observable = client.watchQuery({
+    //     query: gql(listTodos),
+    //     fetchPolicy: 'cache-and-network'
+    //   });
+    //   observable.subscribe((data: any) => {
+    //     this.allTodos = data?.allTodos?.items;
+
+    //   });
+    //   this.allTodos.forEach((todo:any) => {
+    //     if (todo.city) {
+    //       this.apixuService.getWeather(todo.city).subscribe((data:any) => {
+    //         todo.temperature =data.current.temperature
+    //      })
+    //     }
+    //   });
+
+    // });
+
+    // const result = await API.graphql(listTodos)
+
+    // this.todos = this.allTodos
+
+
   }
 
 
-  Edit(inEdit: boolean) {
-    this.inEdit = inEdit;
+  Edit(oneTodo: any) {
+    const todoIndex = this.todos.findIndex(todo => todo.item.id === oneTodo.id)
+    this.todos[todoIndex].isEdit = false;
+    this.todos[todoIndex].item.body = oneTodo.item.body;
+    this.todos[todoIndex].item.city = oneTodo.item.city;
+    this.todos[todoIndex].item.name = oneTodo.item.name;
   }
   get InEdit(): boolean {
     return this.inEdit;
@@ -68,30 +79,12 @@ export class ToDoListComponent implements OnInit {
   }
   async Delete(id: any) {
 
-    await API.graphql({
-      query: deleteTodo,
-      variables: {input: {ID: id}},
-      authMode: 'AMAZON_COGNITO_USER_POOLS'
-    })
-    // const client = await this.appsync.hc();
-    // const result = await client.mutate(buildMutation(
-    //   client,
-    //   gql(updateTodo),
-    //   {
-    //     inputType: gql(updateTodoInput),
-    //     variables: {
-    //       input: {
-    //         ID: id
-    //       }
-    //     },
-    //   },
-    //   _variables => [gql(listTodos)],
-    //   "Todo"
-    // ))
+    alert("task is deleted");
+    await API.graphql(graphqlOperation(deleteTodo, {input:{ID: id}}));
   }
 
-  Cancel() {
-    this.inEdit = false;
+  Cancel(todo: any) {
+  //  this.todos[indexOfelement].isEdit = false;
   }
   async Save(oneTodo: ITodoItem) {
     const todo: ITodoItem = new TodoItemInput();
@@ -101,29 +94,8 @@ export class ToDoListComponent implements OnInit {
     todo.city = oneTodo.city
     todo.id = oneTodo.id;
 
-
-
-const client = await this.appsync.hc();
-    console.log("client", client);
-    const result = await client.mutate(buildMutation(
-      client,
-      gql(updateTodo),
-      {
-        inputType: gql(updateTodoInput),
-        variables: {
-          input: {
-            name: todo.name,
-            body: todo.body,
-            city: todo.city
-          }
-        }
-      },
-      _variables => [gql(listTodos)],
-      "Todo"
-    ))
-    this.allTodos.push(result.data.createTodo);
-  
-    this.Edit(false);
+    await API.graphql(graphqlOperation(updateTodo, {input: todo}));
+    this.Edit(oneTodo);
   }
   
 }

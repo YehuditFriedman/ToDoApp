@@ -8,6 +8,7 @@ import { listTodos } from 'src/graphql/queries';
 import { buildMutation } from 'aws-appsync';
 import { createTodo } from 'src/graphql/mutations';
 import { createTodoInput } from 'src/graphql/inputs';
+import { API, graphqlOperation } from 'aws-amplify';
 
 @Component({
   selector: 'app-add-task',
@@ -49,11 +50,12 @@ export class AddTaskComponent {
 
   async Add() {
     let todo: ITodoItem = new TodoItemInput();
-    todo.completed = false;
     todo.name = this.title;
     todo.body = this.body;
     todo.city = this.city;
 
+
+    await API.graphql(graphqlOperation(createTodo, {input: todo}));
     const client = await this.appsync.hc();
     console.log("client", client);
     const result = await client.mutate(buildMutation(
