@@ -3,11 +3,7 @@ import { APIService } from '../API.service';
 import { ITodoItem } from 'models/ITodoItem';
 import { TodoItemInput } from '../types/TodoItemInput';
 import { AppsyncService } from '../appsync.service';
-import gql from 'graphql-tag';
-import { listTodos } from 'src/graphql/queries';
-import { buildMutation } from 'aws-appsync';
 import { createTodo } from 'src/graphql/mutations';
-import { createTodoInput } from 'src/graphql/inputs';
 import { API, graphqlOperation } from 'aws-amplify';
 
 @Component({
@@ -35,17 +31,6 @@ export class AddTaskComponent {
 
 
   ngOnInit() {
-    this.appsync.hc().then((client: any) => {
-      const observable = client.watchQuery({
-        query: gql(listTodos),
-        fetchPolicy: 'cache-and-network'
-      });
-      observable.subscribe((data: any) => {
-        this.allTodos = data?.allTodos?.items;
-
-      });
-
-    });
   }
 
   async Add() {
@@ -56,25 +41,7 @@ export class AddTaskComponent {
 
 
     await API.graphql(graphqlOperation(createTodo, {input: todo}));
-    const client = await this.appsync.hc();
-    console.log("client", client);
-    const result = await client.mutate(buildMutation(
-      client,
-      gql(createTodo),
-      {
-        inputType: gql(createTodoInput),
-        variables: {
-          input: {
-            name: todo.name,
-            body: todo.body,
-            city: todo.city
-          }
-        }
-      },
-      _variables => [gql(listTodos)],
-      "Todo"
-    ))
-    this.allTodos.push(result.data.createTodo);
+    this.allTodos.push(todo);
     this.Reset(); 
 
 

@@ -17,7 +17,6 @@ export class ToDoListComponent implements OnInit {
   constructor(private appsync: AppsyncService, private apixuService: ApixuService) { }
 
   private inEdit = false;
-  private inSave = false;
   allTodos: any;
   listFilter = 'dfd';
   Title = 'hello';
@@ -62,30 +61,16 @@ export class ToDoListComponent implements OnInit {
 
   }
 
-
-  Edit(oneTodo: any) {
-    const todoIndex = this.todos.findIndex(todo => todo.item.id === oneTodo.id)
-    this.todos[todoIndex].isEdit = false;
-    this.todos[todoIndex].item.body = oneTodo.item.body;
-    this.todos[todoIndex].item.city = oneTodo.item.city;
-    this.todos[todoIndex].item.name = oneTodo.item.name;
-  }
   get InEdit(): boolean {
     return this.inEdit;
   }
 
-  get InSave(): boolean {
-    return this.inSave;
-  }
   async Delete(id: any) {
 
     alert("task is deleted");
     await API.graphql(graphqlOperation(deleteTodo, {input:{ID: id}}));
   }
 
-  Cancel(todo: any) {
-  //  this.todos[indexOfelement].isEdit = false;
-  }
   async Save(oneTodo: ITodoItem) {
     const todo: ITodoItem = new TodoItemInput();
     todo.completed = false;
@@ -97,5 +82,16 @@ export class ToDoListComponent implements OnInit {
     await API.graphql(graphqlOperation(updateTodo, {input: todo}));
     this.Edit(oneTodo);
   }
+
+  Cancel(todo: any) {
+  //  this.todos[indexOfelement].isEdit = false;
+  }
   
+  Edit(oneTodo: any) {
+    const todoIndex = this.todos.findIndex(todo => todo.item.id === oneTodo.id)
+    this.todos[todoIndex].isEdit = false;
+    this.todos[todoIndex].item.body = oneTodo.item.body;
+    this.todos[todoIndex].item.city = oneTodo.item.city;
+    this.todos[todoIndex].item.name = oneTodo.item.name;
+  }
 }
